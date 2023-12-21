@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Details</title>
+</head>
+<body>
+    <div>
+        <label for="pokemon-input">Enter Pokemon Name:</label>
+        <input type="text" id="pokemon-input" placeholder="Enter Pokemon Name">
+        <button onclick="searchPokemon()">Search</button>
+    </div>
+
+    <div id="pokemon-details">
+        <h1 id="pokemon-name">Pokemon Name</h1>
+        <p id="height">Height: </p>
+        <p id="weight">Weight: </p>
+        <p id="types">Types: </p>
+    </div>
+
+    <script>
+        async function getPokemonDetails(pokemonName) {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+                const data = await response.json();
+
+                document.getElementById('pokemon-name').innerText =` Name: ${data.name}`;
+                document.getElementById('height').innerText =` Height: ${data.height} decimetres`;
+                document.getElementById('weight').innerText =` Weight: ${data.weight} hectograms`;
+
+                const types = data.types.map(type => type.type.name).join(', ');
+                document.getElementById('types').innerText =` Types: ${types}`;
+            } catch (error) {
+                console.error('Error fetching Pokemon details:', error);
+            }
+        }
+
+        function searchPokemon() {
+            const inputElement = document.getElementById('pokemon-input');
+            const pokemonName = inputElement.value.toLowerCase();
+
+            if (pokemonName) {
+                getPokemonDetails(pokemonName);
+            } else {
+                alert('Please enter a Pokemon name');
+            }
+        }
+
+        // Call the function with the default Pokemon name
+        getPokemonDetails('bulbasaur');
+    </script>
+</body>
+</html>
